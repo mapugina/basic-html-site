@@ -30,15 +30,3 @@ body {
     animation: gradientRotate 15s ease infinite;
     color: #fff;
 }
-
-/* Individual slide backgrounds */
-#carousel__slide1 { background-image: url("imgs/1.png"); }
-#carousel__slide2 { background-image: url("imgs/2.png"); }
-#carousel__slide3 { background-image: url("imgs/3.jpg"); }
-#carousel__slide4 { background-image: url("imgs/4.jpg"); }
-
-.slide {
-    background-position: center;
-    background-size: contain;
-    background-repeat: no-repeat;
-}
