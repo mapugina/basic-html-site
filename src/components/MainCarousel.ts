@@ -194,9 +194,14 @@ export class MainCarousel extends HTMLElement {
         this.addEventListener('mouseenter', () => {
             this.isHovering = true;
             this.stopAutoRotate();
+            this.resetProgress();
         });
         this.addEventListener('mouseleave', () => {
+            this.stopAutoRotate();
+            this.resetProgress();
+            // Set isHovering to false after stopping and resetting, but before starting
             this.isHovering = false;
+            // Only try to start after isHovering is false
             this.startAutoRotate();
         });
         this.addEventListener('touchstart', this.handleTouchStart, { passive: true });

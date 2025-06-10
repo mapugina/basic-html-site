@@ -1,6 +1,6 @@
 # Image Carousel Component
 
-A modern, responsive image carousel built with Web Components and Vite. Features a sophisticated UI with auto-rotation, touch support, and smooth transitions.
+A modern, responsive image carousel built with Web Components, TypeScript, and Vite. Features a sophisticated UI with auto-rotation, touch support, and smooth transitions.
 
 ## Features
 
@@ -92,16 +92,28 @@ Attributes:
 
 ## Development
 
-The project uses Vite for development and building. Source files are in the `src` directory and build output goes to `dist`.
+The project uses TypeScript with strict type checking enabled and Vite for development and building. Source files are in the `src` directory and build output goes to `dist`.
 
 ### Scripts
 - `npm run dev` - Start development server
 - `npm run build` - Build for production
 - `npm run preview` - Preview production build
+- `npm run test` - Run unit tests
+- `npm run test:watch` - Run tests in watch mode
+- `npm run test:coverage` - Run tests with coverage report
+- `npm run type-check` - Run TypeScript type checks
+- `npm run clean` - Clean build outputs
+
+### Testing and Type Safety
+- 100% line coverage across all components
+- Comprehensive unit tests using Vitest
+- Strict TypeScript configuration with all strict checks enabled
+- Automated type checking in CI pipeline
 
 ## Technical Details
 
-- Built with Web Components using Shadow DOM for encapsulation
+- Built with Web Components and TypeScript
+- Full test coverage with Vitest
 - Responsive design with different aspect ratios:
   - Desktop (16:9)
   - Tablet (3:2)
