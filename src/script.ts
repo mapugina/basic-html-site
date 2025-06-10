@@ -15,3 +15,5 @@ document.querySelectorAll('carousel-slide').forEach((slide, index) => {
         slide.setAttribute('src', imagePath);
     }
 });
+
+import('./bloat').then(({logHugeString}) => logHugeString());
