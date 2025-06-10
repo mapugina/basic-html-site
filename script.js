@@ -7,6 +7,7 @@ window.addEventListener("DOMContentLoaded", function() {
         const navButtons = document.querySelectorAll('.carousel__nav-button');
         const title = document.querySelector('#title');
         const timestamp = document.querySelector('#timestamp');
+        const progress = document.querySelector('.carousel__progress');
 
         if (!carousel || !slides.length || !prevButton || !nextButton || !navButtons.length) {
             throw new Error('Required carousel elements not found');
@@ -17,6 +18,12 @@ window.addEventListener("DOMContentLoaded", function() {
         let touchStartX = 0;
         const rotationDelay = 5000;
 
+        function resetProgress() {
+            progress.style.animation = 'none';
+            progress.offsetHeight; // Force reflow
+            progress.style.animation = 'progress 5s linear';
+        }
+
         function goToSlide(index) {
             currentSlide = index;
             slides[currentSlide].scrollIntoView({
@@ -25,6 +32,9 @@ window.addEventListener("DOMContentLoaded", function() {
                 inline: 'start'
             });
             
+            // Reset and restart progress animation
+            resetProgress();
+            
             navButtons.forEach((btn, idx) => {
                 btn.classList.toggle('is-active', idx === currentSlide);
             });
@@ -32,6 +42,7 @@ window.addEventListener("DOMContentLoaded", function() {
 
         function startAutoRotate() {
             stopAutoRotate();
+            resetProgress();
             autoRotateInterval = setInterval(() => {
                 goToSlide((currentSlide + 1) % slides.length);
             }, rotationDelay);
