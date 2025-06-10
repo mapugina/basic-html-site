@@ -322,6 +322,7 @@ class MainCarousel extends HTMLElement {
     goToSlide(index) {
         if (!this.totalSlides) return;
         this.currentSlide = index;
+        this.resetProgress(); // Reset progress when changing slides
         const slot = this.shadowRoot.querySelector('slot');
         const slides = slot.assignedElements();
         if (slides[this.currentSlide]) {
