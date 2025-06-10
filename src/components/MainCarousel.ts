@@ -139,8 +139,8 @@ export class MainCarousel extends HTMLElement {
                     position: relative;
                     width: min(90vw, 1800px);
                     aspect-ratio: 16/9;
-                    margin: 2rem auto;
-                    margin-bottom: calc(2rem + 30px);
+                    margin: 0 auto;
+                    padding-bottom: 30px;
                     border-radius: clamp(8px, 1vw, 16px);
                     display: block;
                 }
