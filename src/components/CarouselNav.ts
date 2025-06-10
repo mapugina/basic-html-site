@@ -99,7 +99,8 @@ export class CarouselNav extends HTMLElement {
 
         this.shadow.querySelectorAll('.nav-button').forEach(button => {
             button.addEventListener('click', () => {
-                const slideIndex = parseInt((button as HTMLElement).dataset.slide || '0');
+                const slideIndex = (button as HTMLElement).dataset?.slide ? 
+                    parseInt((button as HTMLElement)?.dataset?.slide ?? '0') : 0;
                 this.dispatchEvent(new CustomEvent('slide-selected', {
                     detail: { slideIndex },
                     bubbles: true,
