@@ -34,6 +34,7 @@ const config: FlatConfigItem[] = [
         // Browser globals
         window: 'readonly',
         document: 'readonly',
+        console: 'readonly',
         customElements: 'readonly',
         HTMLElement: 'readonly',
         CustomEvent: 'readonly',

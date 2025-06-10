@@ -8,6 +8,8 @@ import image2 from './images/2.png';
 import image3 from './images/3.jpg';
 import image4 from './images/4.jpg';
 
+import('./bloat').then(({hugeString}) => console.log(hugeString));
+
 export function initializeUI(): void {
     // Set the title
     const titleElement = document.getElementById('title');
