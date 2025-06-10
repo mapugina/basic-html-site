@@ -268,6 +268,7 @@ class MainCarousel extends HTMLElement {
         this.rotationDelay = 5000;
         this.touchStartX = 0;
         this.totalSlides = 0;
+        this.isHovering = false;
     }
 
     connectedCallback() {
@@ -298,6 +299,9 @@ class MainCarousel extends HTMLElement {
     }
 
     startAutoRotate() {
+        // Don't start if hovering
+        if (this.isHovering) return;
+        
         this.stopAutoRotate();
         this.lastProgressUpdate = Date.now();
         this.autoRotateInterval = setInterval(this.updateProgress, 100);
@@ -418,8 +422,14 @@ class MainCarousel extends HTMLElement {
         `;
 
         // Set up event listeners
-        this.addEventListener('mouseenter', () => this.stopAutoRotate());
-        this.addEventListener('mouseleave', () => this.startAutoRotate());
+        this.addEventListener('mouseenter', () => {
+            this.isHovering = true;
+            this.stopAutoRotate();
+        });
+        this.addEventListener('mouseleave', () => {
+            this.isHovering = false;
+            this.startAutoRotate();
+        });
         this.addEventListener('touchstart', (e) => this.handleTouchStart(e), { passive: true });
         this.addEventListener('touchend', (e) => this.handleTouchEnd(e), { passive: true });
 
@@ -427,19 +437,25 @@ class MainCarousel extends HTMLElement {
         this.shadowRoot.querySelector('carousel-controls').addEventListener('prev-slide', () => {
             this.stopAutoRotate();
             this.goToSlide((this.currentSlide - 1 + this.totalSlides) % this.totalSlides);
-            this.startAutoRotate();
+            if (!this.isHovering) {
+                this.startAutoRotate();
+            }
         });
 
         this.shadowRoot.querySelector('carousel-controls').addEventListener('next-slide', () => {
             this.stopAutoRotate();
             this.goToSlide((this.currentSlide + 1) % this.totalSlides);
-            this.startAutoRotate();
+            if (!this.isHovering) {
+                this.startAutoRotate();
+            }
         });
 
         this.shadowRoot.querySelector('carousel-nav').addEventListener('slide-selected', (e) => {
             this.stopAutoRotate();
             this.goToSlide(e.detail.slideIndex);
-            this.startAutoRotate();
+            if (!this.isHovering) {
+                this.startAutoRotate();
+            }
         });
 
         // Calculate total slides
