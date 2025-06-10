@@ -17,17 +17,19 @@ A modern, responsive image carousel built with Web Components, TypeScript, and V
 
 ```
 ├── src/
-│   ├── assets/        # Image assets
+│   ├── assets/        # Static assets
 │   ├── components/    # Web Components
-│   │   ├── CarouselNav.js
-│   │   ├── CarouselControls.js
-│   │   ├── CarouselSlide.js
-│   │   └── MainCarousel.js
-│   ├── index.html     # Main HTML file
-│   ├── script.js      # Component imports
-│   └── styles.css     # Global styles
+│   │   ├── CarouselNav.ts
+│   │   ├── CarouselControls.ts
+│   │   ├── CarouselSlide.ts
+│   │   └── MainCarousel.ts
+│   ├── index.html    # Main HTML file
+│   ├── script.ts     # Component imports
+│   └── styles.css    # Global styles
 ├── package.json
-└── vite.config.js     # Vite build configuration
+├── tsconfig.json     # TypeScript configuration
+├── eslint.config.ts  # ESLint configuration
+└── vite.config.ts    # Vite build configuration
 ```
 
 ## Components
@@ -102,13 +104,19 @@ The project uses TypeScript with strict type checking enabled and Vite for devel
 - `npm run test:watch` - Run tests in watch mode
 - `npm run test:coverage` - Run tests with coverage report
 - `npm run type-check` - Run TypeScript type checks
+- `npm run lint` - Run ESLint checks
+- `npm run lint:fix` - Fix ESLint issues automatically
 - `npm run clean` - Clean build outputs
+- `npm run publish` - Deploy to Google Cloud Storage bucket
 
-### Testing and Type Safety
-- 100% line coverage across all components
-- Comprehensive unit tests using Vitest
-- Strict TypeScript configuration with all strict checks enabled
-- Automated type checking in CI pipeline
+### Quality Assurance
+- 100% test coverage with Vitest and Testing Library
+- ESLint with TypeScript support
+- Strict TypeScript configuration
+- Automated CI checks for:
+  - Type checking
+  - Linting
+  - Unit tests
 
 ## Technical Details
 
