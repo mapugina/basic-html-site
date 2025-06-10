@@ -1,20 +1,28 @@
+interface SlideSelectedEvent extends CustomEvent {
+    detail: {
+        slideIndex: number;
+    };
+}
+
 /**
  * Main carousel component that manages slides, auto-rotation, and touch interactions.
  * Creates a responsive image carousel with navigation dots and controls.
  * @customElement main-carousel
- * 
- * Features:
- * - Auto-rotation with progress indicator
- * - Touch swipe support
- * - Keyboard navigation
- * - Responsive design with different aspect ratios for different screen sizes
- * - Smooth transitions between slides
- * - Pause on hover
  */
 export class MainCarousel extends HTMLElement {
+    private readonly shadow: ShadowRoot;
+    private currentSlide: number;
+    private progressValue: number;
+    private autoRotateInterval: number | null;
+    private lastProgressUpdate: number;
+    private readonly rotationDelay: number;
+    private touchStartX: number;
+    private totalSlides: number;
+    private isHovering: boolean;
+
     constructor() {
         super();
-        this.attachShadow({ mode: 'open' });
+        this.shadow = this.attachShadow({ mode: 'open' });
         this.currentSlide = 0;
         this.progressValue = 0;
         this.autoRotateInterval = null;
@@ -23,18 +31,23 @@ export class MainCarousel extends HTMLElement {
         this.touchStartX = 0;
         this.totalSlides = 0;
         this.isHovering = false;
+
+        // Bind methods to preserve 'this' context
+        this.handleTouchStart = this.handleTouchStart.bind(this);
+        this.handleTouchEnd = this.handleTouchEnd.bind(this);
+        this.updateProgress = this.updateProgress.bind(this);
     }
 
-    connectedCallback() {
+    connectedCallback(): void {
         this.render();
         this.startAutoRotate();
     }
 
-    disconnectedCallback() {
+    disconnectedCallback(): void {
         this.stopAutoRotate();
     }
 
-    updateProgress = () => {
+    private updateProgress(): void {
         const now = Date.now();
         if (this.lastProgressUpdate === 0) this.lastProgressUpdate = now;
         const delta = now - this.lastProgressUpdate;
@@ -45,63 +58,67 @@ export class MainCarousel extends HTMLElement {
             this.goToSlide((this.currentSlide + 1) % this.totalSlides);
         }
         
-        const nav = this.shadowRoot.querySelector('carousel-nav');
+        const nav = this.shadow.querySelector('carousel-nav');
         if (nav) {
-            nav.setAttribute('progress', this.progressValue);
+            nav.setAttribute('progress', this.progressValue.toString());
         }
         this.lastProgressUpdate = now;
     }
 
-    startAutoRotate() {
+    private startAutoRotate(): void {
         if (this.isHovering) return;
         
         this.stopAutoRotate();
         this.lastProgressUpdate = Date.now();
-        this.autoRotateInterval = setInterval(this.updateProgress, 100);
+        this.autoRotateInterval = window.setInterval(this.updateProgress, 100);
     }
 
-    stopAutoRotate() {
+    private stopAutoRotate(): void {
         if (this.autoRotateInterval) {
-            clearInterval(this.autoRotateInterval);
+            window.clearInterval(this.autoRotateInterval);
             this.autoRotateInterval = null;
         }
     }
 
-    resetProgress() {
+    private resetProgress(): void {
         this.progressValue = 0;
         this.lastProgressUpdate = Date.now();
-        const nav = this.shadowRoot.querySelector('carousel-nav');
+        const nav = this.shadow.querySelector('carousel-nav');
         if (nav) {
-            nav.setAttribute('progress', 0);
+            nav.setAttribute('progress', '0');
         }
     }
 
-    goToSlide(index) {
+    private goToSlide(index: number): void {
         if (!this.totalSlides) return;
         this.currentSlide = index;
         this.resetProgress();
-        const slot = this.shadowRoot.querySelector('slot');
+
+        const slot = this.shadow.querySelector('slot');
+        if (!slot) return;
+
         const slides = slot.assignedElements();
-        if (slides[this.currentSlide]) {
-            slides[this.currentSlide].scrollIntoView({
+        const targetSlide = slides[this.currentSlide];
+        if (targetSlide) {
+            targetSlide.scrollIntoView({
                 behavior: 'smooth',
                 block: 'nearest',
                 inline: 'start'
             });
             
-            const nav = this.shadowRoot.querySelector('carousel-nav');
+            const nav = this.shadow.querySelector('carousel-nav');
             if (nav) {
-                nav.setAttribute('current-slide', this.currentSlide);
+                nav.setAttribute('current-slide', this.currentSlide.toString());
             }
         }
     }
 
-    handleTouchStart(e) {
+    private handleTouchStart(e: TouchEvent): void {
         this.touchStartX = e.touches[0].clientX;
         this.stopAutoRotate();
     }
 
-    handleTouchEnd(e) {
+    private handleTouchEnd(e: TouchEvent): void {
         const touchEndX = e.changedTouches[0].clientX;
         const diff = this.touchStartX - touchEndX;
         
@@ -115,8 +132,8 @@ export class MainCarousel extends HTMLElement {
         this.startAutoRotate();
     }
 
-    render() {
-        this.shadowRoot.innerHTML = `
+    private render(): void {
+        this.shadow.innerHTML = `
             <style>
                 :host {
                     position: relative;
@@ -182,41 +199,52 @@ export class MainCarousel extends HTMLElement {
             this.isHovering = false;
             this.startAutoRotate();
         });
-        this.addEventListener('touchstart', (e) => this.handleTouchStart(e), { passive: true });
-        this.addEventListener('touchend', (e) => this.handleTouchEnd(e), { passive: true });
+        this.addEventListener('touchstart', this.handleTouchStart, { passive: true });
+        this.addEventListener('touchend', this.handleTouchEnd, { passive: true });
 
-        this.shadowRoot.querySelector('carousel-controls').addEventListener('prev-slide', () => {
-            this.stopAutoRotate();
-            this.goToSlide((this.currentSlide - 1 + this.totalSlides) % this.totalSlides);
-            if (!this.isHovering) {
-                this.startAutoRotate();
-            }
-        });
+        const controls = this.shadow.querySelector('carousel-controls');
+        if (controls) {
+            controls.addEventListener('prev-slide', () => {
+                this.stopAutoRotate();
+                this.goToSlide((this.currentSlide - 1 + this.totalSlides) % this.totalSlides);
+                if (!this.isHovering) {
+                    this.startAutoRotate();
+                }
+            });
 
-        this.shadowRoot.querySelector('carousel-controls').addEventListener('next-slide', () => {
-            this.stopAutoRotate();
-            this.goToSlide((this.currentSlide + 1) % this.totalSlides);
-            if (!this.isHovering) {
-                this.startAutoRotate();
-            }
-        });
+            controls.addEventListener('next-slide', () => {
+                this.stopAutoRotate();
+                this.goToSlide((this.currentSlide + 1) % this.totalSlides);
+                if (!this.isHovering) {
+                    this.startAutoRotate();
+                }
+            });
+        }
 
-        this.shadowRoot.querySelector('carousel-nav').addEventListener('slide-selected', (e) => {
-            this.stopAutoRotate();
-            this.goToSlide(e.detail.slideIndex);
-            if (!this.isHovering) {
-                this.startAutoRotate();
-            }
-        });
+        const nav = this.shadow.querySelector('carousel-nav');
+        if (nav) {
+            nav.addEventListener('slide-selected', ((e: Event) => {
+                const customEvent = e as SlideSelectedEvent;
+                this.stopAutoRotate();
+                this.goToSlide(customEvent.detail.slideIndex);
+                if (!this.isHovering) {
+                    this.startAutoRotate();
+                }
+            }) as EventListener);
+        }
 
-        const slot = this.shadowRoot.querySelector('slot');
-        slot.addEventListener('slotchange', () => {
-            const slides = slot.assignedElements();
-            this.totalSlides = slides.length;
-            const nav = this.shadowRoot.querySelector('carousel-nav');
-            nav.setAttribute('total-slides', this.totalSlides);
-            slides.forEach(slide => slide.classList.add('slide'));
-        });
+        const slot = this.shadow.querySelector('slot');
+        if (slot) {
+            slot.addEventListener('slotchange', () => {
+                const slides = slot.assignedElements();
+                this.totalSlides = slides.length;
+                const nav = this.shadow.querySelector('carousel-nav');
+                if (nav) {
+                    nav.setAttribute('total-slides', this.totalSlides.toString());
+                }
+                slides.forEach(slide => slide.classList.add('slide'));
+            });
+        }
     }
 }
 

@@ -6,17 +6,19 @@
  * @fires {CustomEvent} next-slide - Fired when the next button is clicked
  */
 export class CarouselControls extends HTMLElement {
+    private readonly shadow: ShadowRoot;
+
     constructor() {
         super();
-        this.attachShadow({ mode: 'open' });
+        this.shadow = this.attachShadow({ mode: 'open' });
     }
 
-    connectedCallback() {
+    connectedCallback(): void {
         this.render();
     }
 
-    render() {
-        this.shadowRoot.innerHTML = `
+    private render(): void {
+        this.shadow.innerHTML = `
             <style>
                 .button {
                     position: absolute;
@@ -54,17 +56,17 @@ export class CarouselControls extends HTMLElement {
             <button class="button next" aria-label="Next slide">&#10095;</button>
         `;
 
-        const prevButton = this.shadowRoot.querySelector('.prev');
-        const nextButton = this.shadowRoot.querySelector('.next');
+        const prevButton = this.shadow.querySelector('.prev');
+        const nextButton = this.shadow.querySelector('.next');
 
-        prevButton.addEventListener('click', () => {
+        prevButton?.addEventListener('click', () => {
             this.dispatchEvent(new CustomEvent('prev-slide', {
                 bubbles: true,
                 composed: true
             }));
         });
 
-        nextButton.addEventListener('click', () => {
+        nextButton?.addEventListener('click', () => {
             this.dispatchEvent(new CustomEvent('next-slide', {
                 bubbles: true,
                 composed: true
