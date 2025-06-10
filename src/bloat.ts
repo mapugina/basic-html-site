@@ -1,5 +1,5 @@
 // A pointlessly large string to bloat the bundle
-const hugeString = `
+export const hugeString = `
 
 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam pulvinar nec quam sodales dapibus. Donec ut orci volutpat, sodales nisi feugiat, mollis mauris. Suspendisse potenti. Donec venenatis nec ante vitae facilisis. Cras vitae scelerisque nibh. Curabitur eu laoreet ipsum, id volutpat neque. Sed tempor mi vitae malesuada venenatis.
 
@@ -200,7 +200,3 @@ In interdum eleifend interdum. Nulla et massa sollicitudin, consectetur velit si
 Etiam sodales auctor justo, in vulputate tellus maximus ac. Pellentesque accumsan metus vel arcu congue, eu dictum nisl consectetur. Nullam eu mauris elementum, vulputate sem eget, commodo lorem. Donec gravida diam ac eros scelerisque pretium. Nullam sit amet vestibulum est. Proin finibus vulputate tortor lacinia accumsan. Vivamus ac posuere purus. Cras id nunc sit amet metus tincidunt placerat id quis erat. Phasellus hendrerit vel dolor ut gravida. Nunc nibh purus, posuere vel risus id, dapibus consectetur lectus. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus vel urna rutrum, sodales quam sit amet, tempus libero.
 
 Cras volutpat, velit non sagittis rhoncus, eros ante ornare nibh, at tincidunt orci justo non velit. Aliquam erat volutpat. Donec ac metus semper, volutpat arcu at, convallis est. Vivamus nec faucibus erat. Aliquam at nisl eu arcu maximus sollicitudin. Nulla facilisi. Donec rhoncus vitae metus a dignissim. Pellentesque semper viverra pharetra. Aenean ut urna placerat tortor finibus molestie at in dolor. Fusce vitae molestie lorem. Integer arcu augue, semper sit amet odio eget, aliquam euismod eros. Integer et faucibus leo. Integer a nisi ac est efficitur congue venenatis eget nunc. `;
-
-export const logHugeString = () => {
-    console.log(hugeString);
-};
