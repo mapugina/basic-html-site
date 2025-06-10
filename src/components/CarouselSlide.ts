@@ -5,28 +5,30 @@
  * @attr {string} src - The source URL of the image to display
  */
 export class CarouselSlide extends HTMLElement {
+    private readonly shadow: ShadowRoot;
+
     constructor() {
         super();
-        this.attachShadow({ mode: 'open' });
+        this.shadow = this.attachShadow({ mode: 'open' });
     }
 
-    static get observedAttributes() {
+    static get observedAttributes(): string[] {
         return ['src'];
     }
 
-    connectedCallback() {
+    connectedCallback(): void {
         this.render();
     }
 
-    attributeChangedCallback(name, oldValue, newValue) {
+    attributeChangedCallback(_name: string, oldValue: string | null, newValue: string | null): void {
         if (oldValue !== newValue) {
             this.render();
         }
     }
 
-    render() {
-        const src = this.getAttribute('src');
-        this.shadowRoot.innerHTML = `
+    private render(): void {
+        const src = this.getAttribute('src') || '';
+        this.shadow.innerHTML = `
             <style>
                 :host {
                     min-width: 100%;

@@ -1,4 +1,3 @@
-
 /**
  * A navigation component for the carousel that displays dots for each slide and a progress bar.
  * @customElement carousel-nav
@@ -6,36 +5,35 @@
  * @attr {number} current-slide - The index of the currently active slide (0-based)
  * @attr {number} total-slides - The total number of slides in the carousel
  * @attr {number} progress - The progress percentage (0-100) for the current slide transition
- * 
- * @fires {CustomEvent} slide-selected - Fired when a navigation dot is clicked
- *        detail: { slideIndex: number } - The index of the selected slide
  */
 export class CarouselNav extends HTMLElement {
+    private readonly shadow: ShadowRoot;
+
     constructor() {
         super();
-        this.attachShadow({ mode: 'open' });
+        this.shadow = this.attachShadow({ mode: 'open' });
     }
 
-    static get observedAttributes() {
+    static get observedAttributes(): string[] {
         return ['current-slide', 'total-slides', 'progress'];
     }
 
-    connectedCallback() {
+    connectedCallback(): void {
         this.render();
     }
 
-    attributeChangedCallback(name, oldValue, newValue) {
+    attributeChangedCallback(_name: string, oldValue: string | null, newValue: string | null): void {
         if (oldValue !== newValue) {
             this.render();
         }
     }
 
-    render() {
-        const totalSlides = parseInt(this.getAttribute('total-slides')) || 0;
-        const currentSlide = parseInt(this.getAttribute('current-slide')) || 0;
-        const progress = parseFloat(this.getAttribute('progress')) || 0;
+    private render(): void {
+        const totalSlides = parseInt(this.getAttribute('total-slides') || '0');
+        const currentSlide = parseInt(this.getAttribute('current-slide') || '0');
+        const progress = parseFloat(this.getAttribute('progress') || '0');
 
-        this.shadowRoot.innerHTML = `
+        this.shadow.innerHTML = `
             <style>
                 :host {
                     position: absolute;
@@ -99,9 +97,9 @@ export class CarouselNav extends HTMLElement {
             </div>
         `;
 
-        this.shadowRoot.querySelectorAll('.nav-button').forEach(button => {
+        this.shadow.querySelectorAll('.nav-button').forEach(button => {
             button.addEventListener('click', () => {
-                const slideIndex = parseInt(button.dataset.slide);
+                const slideIndex = parseInt((button as HTMLElement).dataset.slide || '0');
                 this.dispatchEvent(new CustomEvent('slide-selected', {
                     detail: { slideIndex },
                     bubbles: true,
