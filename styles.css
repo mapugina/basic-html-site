@@ -43,6 +43,18 @@
     }
   }
   
+  @keyframes gradientRotate {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
+}
+  
   body {
     min-height: 100vh;
     margin: 0;
@@ -52,7 +64,15 @@
     align-items: center;
     justify-content: center;
     font-family: 'Lato', sans-serif;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, 
+        #667eea 0%, 
+        #764ba2 25%, 
+        #65b6ea 50%,
+        #8c7ae6 75%,
+        #667eea 100%
+    );
+    background-size: 400% 400%;
+    animation: gradientRotate 15s ease infinite;
     color: #fff;
   }
   
