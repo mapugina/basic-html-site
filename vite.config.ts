@@ -2,6 +2,7 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 
 import { defineConfig } from 'vite';
+import type { UserConfigExport } from 'vite';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -11,7 +12,8 @@ export default defineConfig({
     target: 'es2020',
     outDir: path.resolve(__dirname, 'dist'),
     emptyOutDir: true,
-    assetsDir: 'assets'
+    assetsDir: 'assets',
+    copyPublicDir: true
   },
   resolve: {
     alias: {
@@ -19,23 +21,33 @@ export default defineConfig({
     },
   },
   root: 'src',
-  publicDir: 'assets',
+  publicDir: '../src/assets',
   test: {
     environment: 'happy-dom',
-    include: ['src/**/*.{test,spec}.{js,ts}'],
+    include: ['**/*.{test,spec}.{js,ts}'],
     globals: true,
-    root: __dirname,
+    root: 'src',
+    setupFiles: ['test/setup.ts'],
     coverage: {
       provider: 'v8',
-      reporter: ['text', 'html', 'json', 'lcov'],
+      reporter: ['text', 'html'],
       exclude: [
         'coverage/**',
         'dist/**',
-        '**/node_modules/**',
+        '**/test/**',
         '**/*.test.ts',
-        'src/test/**',
-        '*.ts'
+        '**/*.spec.ts',
+        'vite.config.ts',
+        'eslint.config.ts'
       ]
+    },
+    environmentOptions: {
+      happyDOM: {
+        customElements: true,
+        settings: {
+          enableCustomElements: true
+        }
+      }
     }
   }
-});
+} as UserConfigExport);
