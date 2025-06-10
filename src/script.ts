@@ -8,7 +8,7 @@ import image2 from './images/2.png';
 import image3 from './images/3.jpg';
 import image4 from './images/4.jpg';
 
-export function initializeUI() {
+export function initializeUI(): void {
     // Set the title
     const titleElement = document.getElementById('title');
     if (titleElement) {

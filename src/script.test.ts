@@ -1,4 +1,5 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
+
 import { initializeUI } from './script';
 
 describe('Main Script', () => {
