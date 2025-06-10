@@ -196,32 +196,38 @@
     padding-left: 3px;
   }
   
-  .carousel__nav {
+  .carousel__nav-wrapper {
     position: absolute;
     bottom: -30px;
     left: 50%;
     transform: translateX(-50%);
-    display: flex;
-    gap: clamp(5px, 1vw, 15px);
-    z-index: 10;
     background: rgba(0, 0, 0, 0.2);
     padding: 8px 16px;
     border-radius: 20px;
     backdrop-filter: blur(2px);
     overflow: hidden;
     width: fit-content;
-  }
-  
-  .carousel__progress {
+}
+
+.carousel__nav {
+    position: relative;
+    display: flex;
+    gap: clamp(5px, 1vw, 15px);
+    z-index: 2;
+    margin: 0;
+    padding: 0;
+}
+
+.carousel__progress {
     position: absolute;
     top: 0;
     left: 0;
-    right: 0;
     height: 100%;
     background: rgba(255, 255, 255, 0.15);
     transform: translateX(-100%);
     width: 100%;
-  }
+    z-index: 1;
+}
   
   .carousel__nav-button {
     width: clamp(10px, 1.2vw, 14px);
