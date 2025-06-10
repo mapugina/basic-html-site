@@ -18,8 +18,13 @@ A modern, responsive image carousel built with Web Components and Vite. Features
 ```
 ├── src/
 │   ├── assets/        # Image assets
+│   ├── components/    # Web Components
+│   │   ├── CarouselNav.js
+│   │   ├── CarouselControls.js
+│   │   ├── CarouselSlide.js
+│   │   └── MainCarousel.js
 │   ├── index.html     # Main HTML file
-│   ├── script.js      # Web Components implementation
+│   ├── script.js      # Component imports
 │   └── styles.css     # Global styles
 ├── package.json
 └── vite.config.js     # Vite build configuration
@@ -27,7 +32,7 @@ A modern, responsive image carousel built with Web Components and Vite. Features
 
 ## Components
 
-### MainCarousel
+### MainCarousel (`main-carousel`)
 The primary carousel container that manages slide transitions and user interactions.
 
 ```html
@@ -37,14 +42,33 @@ The primary carousel container that manages slide transitions and user interacti
 </main-carousel>
 ```
 
-### CarouselNav
+Features:
+- Auto-rotation with configurable delay (default: 5000ms)
+- Touch swipe support with threshold detection
+- Responsive aspect ratios (16:9 desktop, 3:2 tablet, 4:3 mobile)
+- Pause on hover functionality
+- Event management for all user interactions
+
+### CarouselNav (`carousel-nav`)
 Navigation dots with progress indicator showing the current slide and auto-rotation progress.
 
-### CarouselControls
+Attributes:
+- `current-slide`: Current slide index (0-based)
+- `total-slides`: Total number of slides
+- `progress`: Current progress percentage (0-100)
+
+### CarouselControls (`carousel-controls`)
 Previous/Next navigation buttons with hover effects and backdrop blur.
 
-### CarouselSlide
+Events:
+- `prev-slide`: Emitted when previous button is clicked
+- `next-slide`: Emitted when next button is clicked
+
+### CarouselSlide (`carousel-slide`)
 Individual slide component optimized for image display.
+
+Attributes:
+- `src`: Image source URL
 
 ## Getting Started
 
@@ -100,4 +124,8 @@ Supports all modern browsers that implement the Web Components specification:
 - Chrome/Edge (Chromium)
 - Firefox
 - Safari
+
+## License
+
+ISC
 
