@@ -1,10 +1,23 @@
 import eslint from '@eslint/js';
 import tseslint from '@typescript-eslint/eslint-plugin';
 import tsparser from '@typescript-eslint/parser';
-import type { Linter } from '@typescript-eslint/utils/ts-eslint';
-import importPlugin from 'eslint-plugin-import';
+import * as importPlugin from 'eslint-plugin-import';
 
-const config: Linter.FlatConfig[] = [
+interface FlatConfigItem {
+  files?: string[];
+  ignores?: string[];
+  languageOptions?: {
+    parser?: typeof tsparser;
+    parserOptions?: Record<string, unknown>;
+    globals?: Record<string, 'off' | 'readonly' | 'writable'>;
+    sourceType?: 'module' | 'commonjs' | 'script';
+    ecmaVersion?: number | 'latest';
+  };
+  plugins?: Record<string, unknown>;
+  rules?: Record<string, unknown>;
+}
+
+const config: FlatConfigItem[] = [
   {
     // Ignore generated files and dependencies
     ignores: ['**/dist/**', '**/coverage/**', '**/node_modules/**']
@@ -15,8 +28,8 @@ const config: Linter.FlatConfig[] = [
     files: ['**/*.ts'],
     languageOptions: {
       parser: tsparser,
-      ecmaVersion: 'latest' as const,
-      sourceType: 'module' as const,
+      ecmaVersion: 'latest',
+      sourceType: 'module',
       globals: {
         // Browser globals
         window: 'readonly',
