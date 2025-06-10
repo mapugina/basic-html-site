@@ -15,34 +15,11 @@
     <h1 id="title"></h1>
     <p id="timestamp"></p>
 
-    <section class="carousel" aria-label="Gallery">
-        <button class="carousel__button carousel__button--prev" aria-label="Previous slide">&#10094;</button>
-        <button class="carousel__button carousel__button--next" aria-label="Next slide">&#10095;</button>
-
-        <ol class="carousel__viewport">
-            <li id="carousel__slide1" tabindex="0" class="carousel__slide"></li>
-            <li id="carousel__slide2" tabindex="0" class="carousel__slide"></li>
-            <li id="carousel__slide3" tabindex="0" class="carousel__slide"></li>
-            <li id="carousel__slide4" tabindex="0" class="carousel__slide"></li>
-        </ol>
-        
-        <div class="carousel__nav-wrapper">
-            <div class="carousel__progress"></div>
-            <ol class="carousel__nav">
-                <li class="carousel__nav-item">
-                    <button class="carousel__nav-button" data-slide="0">Go to slide 1</button>
-                </li>
-                <li class="carousel__nav-item">
-                    <button class="carousel__nav-button" data-slide="1">Go to slide 2</button>
-                </li>
-                <li class="carousel__nav-item">
-                    <button class="carousel__nav-button" data-slide="2">Go to slide 3</button>
-                </li>
-                <li class="carousel__nav-item">
-                    <button class="carousel__nav-button" data-slide="3">Go to slide 4</button>
-                </li>
-            </ol>
-        </div>
-    </section>
+    <main-carousel>
+        <div id="carousel__slide1" class="slide"></div>
+        <div id="carousel__slide2" class="slide"></div>
+        <div id="carousel__slide3" class="slide"></div>
+        <div id="carousel__slide4" class="slide"></div>
+    </main-carousel>
 </body>
 </html>
