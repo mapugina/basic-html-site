@@ -1,13 +1,24 @@
-import { defineConfig } from 'vite';
-import { resolve } from 'path';
+import path from 'path';
+import { fileURLToPath } from 'url';
 
+import { defineConfig } from 'vite';
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+
+// https://vitejs.dev/config/
 export default defineConfig({
-  root: 'src',
   build: {
-    outDir: resolve(__dirname, 'dist'),
+    target: 'es2020',
+    outDir: path.resolve(__dirname, 'dist'),
     emptyOutDir: true,
-    assetsDir: 'assets',
+    assetsDir: 'assets'
   },
+  resolve: {
+    alias: {
+      '@': path.resolve(__dirname, './src'),
+    },
+  },
+  root: 'src',
   publicDir: 'assets',
   test: {
     environment: 'happy-dom',
