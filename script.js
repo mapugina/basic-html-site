@@ -17,11 +17,44 @@ window.addEventListener("DOMContentLoaded", function() {
         let autoRotateInterval;
         let touchStartX = 0;
         const rotationDelay = 5000;
+        let progressValue = 0;
+        let lastProgressUpdate = 0;
+
+        function updateProgress() {
+            const now = Date.now();
+            if (lastProgressUpdate === 0) lastProgressUpdate = now;
+            const delta = now - lastProgressUpdate;
+            progressValue = progressValue + (delta / rotationDelay) * 100;
+            
+            if (progressValue >= 100) {
+                goToSlide((currentSlide + 1) % slides.length);
+                progressValue = 0;
+            }
+            
+            progress.style.setProperty('--progress', progressValue);
+            lastProgressUpdate = now;
+        }
 
         function resetProgress() {
-            progress.style.animation = 'none';
-            progress.offsetHeight; // Force reflow
-            progress.style.animation = 'progress 5s linear';
+            progressValue = 0;
+            lastProgressUpdate = Date.now();
+            progress.style.setProperty('--progress', 0);
+        }
+
+        function startProgressAnimation() {
+            if (autoRotateInterval) return;
+            lastProgressUpdate = Date.now();
+            autoRotateInterval = setInterval(() => {
+                updateProgress();
+            }, 100); // Update progress more frequently for smooth animation
+        }
+
+        function pauseProgress() {
+            if (autoRotateInterval) {
+                clearInterval(autoRotateInterval);
+                autoRotateInterval = null;
+                updateProgress(); // Capture final position
+            }
         }
 
         function goToSlide(index) {
@@ -32,7 +65,6 @@ window.addEventListener("DOMContentLoaded", function() {
                 inline: 'start'
             });
             
-            // Reset and restart progress animation
             resetProgress();
             
             navButtons.forEach((btn, idx) => {
@@ -40,65 +72,52 @@ window.addEventListener("DOMContentLoaded", function() {
             });
         }
 
-        function startAutoRotate() {
-            stopAutoRotate();
-            resetProgress();
-            autoRotateInterval = setInterval(() => {
-                goToSlide((currentSlide + 1) % slides.length);
-            }, rotationDelay);
-        }
+        // Event Listeners
+        carousel.addEventListener('mouseenter', () => {
+            pauseProgress();
+        });
 
-        function stopAutoRotate() {
-            if (autoRotateInterval) {
-                clearInterval(autoRotateInterval);
-                autoRotateInterval = null;
-            }
-        }
+        carousel.addEventListener('mouseleave', () => {
+            startProgressAnimation();
+        });
 
-        // Touch events
-        function handleTouchStart(e) {
+        carousel.addEventListener('touchstart', (e) => {
             touchStartX = e.touches[0].clientX;
-            stopAutoRotate();
-        }
+            pauseProgress();
+        }, { passive: true });
 
-        function handleTouchEnd(e) {
+        carousel.addEventListener('touchend', (e) => {
             const touchEndX = e.changedTouches[0].clientX;
             const diff = touchStartX - touchEndX;
             
-            if (Math.abs(diff) > 50) { // Minimum swipe distance
+            if (Math.abs(diff) > 50) {
                 if (diff > 0) {
                     goToSlide((currentSlide + 1) % slides.length);
                 } else {
                     goToSlide((currentSlide - 1 + slides.length) % slides.length);
                 }
             }
-            startAutoRotate();
-        }
-
-        // Event Listeners
-        carousel.addEventListener('mouseenter', stopAutoRotate);
-        carousel.addEventListener('mouseleave', startAutoRotate);
-        carousel.addEventListener('touchstart', handleTouchStart, { passive: true });
-        carousel.addEventListener('touchend', handleTouchEnd, { passive: true });
+            startProgressAnimation();
+        }, { passive: true });
 
         prevButton.addEventListener('click', () => {
-            stopAutoRotate();
+            pauseProgress();
             goToSlide((currentSlide - 1 + slides.length) % slides.length);
-            startAutoRotate();
+            startProgressAnimation();
         });
 
         nextButton.addEventListener('click', () => {
-            stopAutoRotate();
+            pauseProgress();
             goToSlide((currentSlide + 1) % slides.length);
-            startAutoRotate();
+            startProgressAnimation();
         });
 
         navButtons.forEach((button) => {
             button.addEventListener('click', () => {
-                stopAutoRotate();
+                pauseProgress();
                 const slideIndex = parseInt(button.dataset.slide);
                 goToSlide(slideIndex);
-                startAutoRotate();
+                startProgressAnimation();
             });
         });
 
@@ -107,12 +126,13 @@ window.addEventListener("DOMContentLoaded", function() {
         if (timestamp) timestamp.innerHTML = (new Date()).toString();
 
         // Initial setup
-        startAutoRotate();
+        resetProgress();
+        startProgressAnimation();
         goToSlide(0);
 
         // Cleanup on page unload
         window.addEventListener('unload', () => {
-            stopAutoRotate();
+            pauseProgress();
         });
 
     } catch (error) {
