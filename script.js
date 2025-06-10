@@ -187,6 +187,58 @@ class CarouselControls extends HTMLElement {
 }
 
 /**
+ * Individual slide component for the carousel
+ * @customElement carousel-slide
+ * 
+ * @attr {string} src - The source URL of the image to display
+ */
+class CarouselSlide extends HTMLElement {
+    constructor() {
+        super();
+        this.attachShadow({ mode: 'open' });
+    }
+
+    static get observedAttributes() {
+        return ['src'];
+    }
+
+    connectedCallback() {
+        this.render();
+    }
+
+    attributeChangedCallback(name, oldValue, newValue) {
+        if (oldValue !== newValue) {
+            this.render();
+        }
+    }
+
+    render() {
+        const src = this.getAttribute('src');
+        this.shadowRoot.innerHTML = `
+            <style>
+                :host {
+                    min-width: 100%;
+                    width: 100%;
+                    height: 100%;
+                    position: relative;
+                    scroll-snap-align: center;
+                    scroll-snap-stop: always;
+                }
+                .slide {
+                    width: 100%;
+                    height: 100%;
+                    background-image: url("${src}");
+                    background-position: center;
+                    background-size: contain;
+                    background-repeat: no-repeat;
+                }
+            </style>
+            <div class="slide"></div>
+        `;
+    }
+}
+
+/**
  * Main carousel component that manages slides, auto-rotation, and touch interactions.
  * Creates a responsive image carousel with navigation dots and controls.
  * @customElement main-carousel
@@ -404,4 +456,5 @@ class MainCarousel extends HTMLElement {
 // Register custom elements
 customElements.define('carousel-nav', CarouselNav);
 customElements.define('carousel-controls', CarouselControls);
+customElements.define('carousel-slide', CarouselSlide);
 customElements.define('main-carousel', MainCarousel);
